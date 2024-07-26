@@ -12,7 +12,7 @@ def generate_random_filename(length=8):
 def generate_image(prompt,
                    img_style):
     
-    prompt = prompt + " In the style of " + img_style
+    prompt =f"{img_style} image of " + prompt + "\n- Image Style: " + img_style
     print(f"Calling model with prompt: {prompt}")
 
     try:

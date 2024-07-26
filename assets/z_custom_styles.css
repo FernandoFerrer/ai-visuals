@@ -19,36 +19,119 @@ h1,h6,h2, h3, h4, h5 {
   }
 
 .apply-padding {
-    padding: 10px 20px;
+    padding: 5px 25px;
 }
+
+.Select-control {
+    background-color: #cccccc70 !important;
+    border: 0 !important;
+    margin-bottom: 5px
+}
+
+/* Fade in animation ========= */
+.fade-in {
+    animation: fadeIn ease 10s;
+    -webkit-animation: fadeIn ease 10s;
+    -moz-animation: fadeIn ease 10s;
+    -o-animation: fadeIn ease 10s;
+    -ms-animation: fadeIn ease 10s;
+  }
+  
+  
+  @keyframes fadeIn{
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-o-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-ms-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #0d0d0d83 #ffffff7a;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff7c;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #0d0d0d83;
+    border-radius: 2px;
+    border: 5px double #ffffff79;
+  }
 
 #input-text-seed {
     width: 100%;
     height: 20vh;
     padding: 20px;
-    border: 2px solid #ccc;
     border-radius: 10px;
     max-width: 600px;
-    font-family: 'Georgia', serif;
+    font-family: "Courier New", Courier, monospace;;
     font-size: large;
     line-height: 1.6;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #cccccc70;
+    overflow: hidden;
 }
 
 #output-text-story {
     width: 100%;
-    height: 60vh;
+    height: 66vh;
     padding: 20px;
-    border: 2px solid #ccc;
     border-radius: 10px;
     max-width: 600px;
     margin-top: 10px;
     margin-bottom: 10px;
-    font-family: 'Georgia', serif;
+    font-family: "Courier New", Courier, monospace;;
     font-size: large;
     line-height: 1.6;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #cccccc83;
+    background-color: #cccccc70;
 }
 
 #img-style-dropdown {
@@ -58,18 +141,6 @@ h1,h6,h2, h3, h4, h5 {
 
 #main-content {
     height: 100vh;
-}
-
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
 }
 
 
