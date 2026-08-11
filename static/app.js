@@ -1,7 +1,7 @@
 const $ = (id) => document.getElementById(id);
 const camera = $("camera"), overlay = $("overlay"), capture = $("capture");
 const ctx = overlay.getContext("2d"), captureCtx = capture.getContext("2d");
-let masks = [], processing = false, active = false;
+let masks = [], processing = false, active = false, segmentationMode = "instance";
 
 const hexToHsl = (hex) => {
   const rgb = [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16) / 255);
@@ -32,11 +32,21 @@ function draw() {
   ctx.clearRect(0, 0, overlay.width, overlay.height);
   const count = +$("colorCount").value, flash = +$("flash").value / 100;
   const pulse = 0.55 + Math.sin(Date.now() / 180) * flash * 0.45;
+  const foregroundColorCount = Math.max(count - 1, 1);
+  const backgroundColor = colorFromIndex(count - 1, count);
+
+  // Reserve one palette color for pixels that are not part of an object mask.
+  ctx.fillStyle = backgroundColor;
+  ctx.globalAlpha = pulse * .28;
+  ctx.fillRect(0, 0, overlay.width, overlay.height);
+
   masks.forEach((mask, index) => {
     const points = mask.points; if (!points?.length) return;
     ctx.beginPath(); points.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath();
-    ctx.fillStyle = colorFromIndex(index % count, count); ctx.globalAlpha = pulse * .66; ctx.fill();
-    ctx.globalAlpha = .95; ctx.lineWidth = 2; ctx.strokeStyle = colorFromIndex(index % count, count); ctx.stroke();
+    const colorIndex = segmentationMode === "semantic" ? mask.class_id % foregroundColorCount : index % foregroundColorCount;
+    const color = colorFromIndex(colorIndex, count);
+    ctx.fillStyle = color; ctx.globalAlpha = pulse * .66; ctx.fill();
+    ctx.globalAlpha = .95; ctx.lineWidth = 2; ctx.strokeStyle = color; ctx.stroke();
   });
   ctx.globalAlpha = 1; requestAnimationFrame(draw);
 }
@@ -47,13 +57,22 @@ async function infer() {
   capture.width = camera.videoWidth; capture.height = camera.videoHeight;
   captureCtx.drawImage(camera, 0, 0); 
   try {
-    const response = await fetch("/segment", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({image:capture.toDataURL("image/jpeg", .72)}) });
+    const response = await fetch("/segment", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({image:capture.toDataURL("image/jpeg", .72), mode:segmentationMode}) });
     const data = await response.json();
     if (!response.ok) throw Error(data.error);
-    masks = data.masks; $("status").textContent = `${masks.length} instances detected`;
+    masks = data.masks;
+    $("status").textContent = segmentationMode === "semantic"
+      ? `${data.class_count} semantic classes detected`
+      : `${masks.length} instances detected`;
   } catch (error) { $("status").textContent = `Segmentation unavailable: ${error.message}`; }
   processing = false; setTimeout(infer, 80);
 }
+
+$("segmentationMode").onchange = (e) => {
+  segmentationMode = e.target.value;
+  masks = [];
+  if (active) $("status").textContent = `Switching to ${segmentationMode} segmentation...`;
+};
 
 $("startCamera").onclick = async () => {
   if (!navigator.mediaDevices?.getUserMedia) {

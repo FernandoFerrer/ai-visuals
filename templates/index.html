@@ -19,6 +19,7 @@
       </div>
       <aside class="controls">
         <div class="control-group"><label>Camera</label><button id="startCamera">Start camera</button><p class="status" id="status">Waiting for camera</p></div>
+        <div class="control-group"><label for="segmentationMode">Segmentation mode</label><select id="segmentationMode"><option value="instance" selected>Instance</option><option value="semantic">Semantic</option></select></div>
         <div class="control-group"><label for="palette">Palette</label><input id="palette" type="color" value="#b6ff3b"><output id="paletteValue">#B6FF3B</output></div>
         <div class="control-group"><label for="colorCount">Segmentation colors <output id="colorCountValue">4</output></label><input id="colorCount" type="range" min="1" max="8" value="4"></div>
         <div class="control-group"><label for="flash">Flash intensity <output id="flashValue">25%</output></label><input id="flash" type="range" min="0" max="100" value="25"></div>
