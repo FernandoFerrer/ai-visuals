@@ -1,0 +1,39 @@
+# Python bytecode and tooling
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Local environments and secrets
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Downloaded model weights and local ML caches
+*.pt
+*.pth
+*.onnx
+*.engine
+*.tflite
+models/
+weights/
+runs/
+
+# Runtime uploads and generated media
+uploads/
+instance/
+generated/
+
+# IDE and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

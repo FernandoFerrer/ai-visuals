@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Visuals — by Zerø State</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="app-shell">
+    <header><a class="brand" href="/">AI<span>VISUALS</span> by Zerø State</a><p>Live instance segmentation</p></header>
+    <section class="studio">
+      <div class="stage" id="stage">
+        <video id="camera" autoplay muted playsinline></video>
+        <canvas id="overlay"></canvas>
+        <img id="logo" alt="">
+        <div class="empty-state" id="emptyState"><strong>Camera is ready when you are.</strong><span>Choose Start camera to begin.</span></div>
+        <button class="fullscreen" id="fullscreen" aria-label="Toggle fullscreen">⛶</button>
+      </div>
+      <aside class="controls">
+        <div class="control-group"><label>Camera</label><button id="startCamera">Start camera</button><p class="status" id="status">Waiting for camera</p></div>
+        <div class="control-group"><label for="palette">Palette</label><input id="palette" type="color" value="#b6ff3b"><output id="paletteValue">#B6FF3B</output></div>
+        <div class="control-group"><label for="colorCount">Segmentation colors <output id="colorCountValue">4</output></label><input id="colorCount" type="range" min="1" max="8" value="4"></div>
+        <div class="control-group"><label for="flash">Flash intensity <output id="flashValue">25%</output></label><input id="flash" type="range" min="0" max="100" value="25"></div>
+        <div class="control-group">
+          <label for="logoFile">Overlay logo</label>
+          <input id="logoFile" type="file" accept="image/*">
+          <label for="logoSize">Logo size <output id="logoSizeValue">96 px</output></label>
+          <input id="logoSize" type="range" min="40" max="240" value="96">
+          <label for="logoPosition">Position</label>
+          <select id="logoPosition">
+            <option value="top-left">Top left</option>
+            <option value="top-right">Top right</option>
+            <option value="bottom-left">Bottom left</option>
+            <option value="bottom-right" selected>Bottom right</option>
+          </select>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <canvas id="capture" hidden></canvas>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
