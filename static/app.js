@@ -2,9 +2,10 @@ const $ = (id) => document.getElementById(id);
 const camera = $("camera"), overlay = $("overlay"), capture = $("capture");
 const ctx = overlay.getContext("2d"), captureCtx = capture.getContext("2d");
 const CAPTURE_MAX_DIMENSION = 640;
-const INFERENCE_INTERVAL_MS = 20;
+const INFERENCE_INTERVAL_MS = 0;
 let masks = [], processing = false, active = false, segmentationMode = "instance", latestInference = null;
 let nerdLogLines = [], nerdLogTimer = null, nerdSequence = 0, lastNerdInferenceLog = 0;
+let nerdLatencyHistory = [];
 const PERSON_ALIASES = [
   "Wandering Wizard", "Dancing Goblin", "Dancefloor Angel", "Neon Witch", "Moonlit Mage",
   "Astral Wanderer", "Cosmic Oracle", "Dream Alchemist", "Midnight Seer", "Starlight Shaman",
@@ -126,11 +127,41 @@ function updateNerdMode() {
   startNerdTerminal();
 }
 
+function telemetryChart(values) {
+  const width = 42, height = 5;
+  if (!values.length) return "  latency trace / awaiting inference\n\n";
+  const sample = values.slice(-width);
+  const max = Math.max(...sample, 1);
+  const columns = Array.from({ length: width }, (_, index) => {
+    const value = sample[index - (width - sample.length)] || 0;
+    return Math.max(1, Math.round(value / max * height));
+  });
+  const lines = Array.from({ length: height }, (_, row) =>
+    columns.map((level) => level >= height - row ? "█" : "·").join(""));
+  return `  INFERENCE LATENCY / ${Math.round(sample.at(-1))}ms\n${lines.join("\n")}`;
+}
+
+function renderNerdTelemetry() {
+  const info = latestInference || {};
+  const latency = info.latency;
+  if (latency) nerdLatencyHistory = [...nerdLatencyHistory, latency].slice(-24);
+  $("nerdFps").textContent = latency ? Math.max(1, Math.round(1000 / latency)) : "--";
+  $("nerdLatency").textContent = latency ? `${Math.round(latency)} ms` : "-- ms";
+  $("nerdMasks").textContent = (info.masks || masks).length || "--";
+  $("nerdClasses").textContent = info.class_count ?? "--";
+  $("nerdModel").textContent = (info.model || "YOLO11-SEG").toUpperCase();
+  $("nerdDevice").textContent = info.accelerated ? `${info.device} / FP16` : "AWAITING CUDA";
+  $("nerdLatencyChart").textContent = telemetryChart(nerdLatencyHistory);
+}
+
 const hexToRgbChannels = (hex) => [1, 3, 5]
   .map((start) => parseInt(hex.slice(start, start + 2), 16))
   .join(" ");
 
-const nerdTimestamp = () => new Date().toISOString().slice(11, 23);
+function nerdTimestamp(date = new Date()) {
+  const pad = (value, length = 2) => String(value).padStart(length, "0");
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${pad(date.getMilliseconds(), 3)}`;
+}
 const ZERO_STATE_ASCII_LOGO = [
   "███████╗███████╗██████╗  ██████╗     ███████╗████████╗ █████╗ ████████╗███████╗",
   "╚══███╔╝██╔════╝██╔══██╗██╔═══██╗    ██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██╔════╝",
@@ -201,6 +232,8 @@ function startNerdTerminal() {
   nerdLogLines = [];
   nerdSequence = 0;
   lastNerdInferenceLog = 0;
+  nerdLatencyHistory = [];
+  renderNerdTelemetry();
   appendNerdLogs([
     ...ZERO_STATE_ASCII_LOGO,
     "",
@@ -245,8 +278,7 @@ function renderNerdLogs(force = false) {
   if (!force && nowMs - lastNerdInferenceLog < 700) return;
   lastNerdInferenceLog = nowMs;
 
-  const now = new Date();
-  const timestamp = now.toISOString().slice(11, 23);
+  const timestamp = nerdTimestamp();
   const info = latestInference || {};
   const detections = (info.detections || []).slice(0, 5);
   const detectionLines = detections.length
@@ -277,7 +309,8 @@ function draw() {
   if (!active) return;
   ctx.clearRect(0, 0, overlay.width, overlay.height);
   const count = +$("colorCount").value, flash = +$("flash").value / 100;
-  const pulse = 0.55 + Math.sin(Date.now() / 180) * flash * 0.45;
+  const flashSpeed = +$("flashSpeed").value;
+  const pulse = 0.55 + Math.sin(performance.now() * flashSpeed * Math.PI * 2 / 1000) * flash * 0.45;
   const foregroundColorCount = Math.max(count - 1, 1);
   const backgroundColor = colorFromIndex(count - 1, count);
   const labels = [];
@@ -324,6 +357,7 @@ async function infer() {
       points: mask.points.map(([x, y]) => [x * xScale, y * yScale]),
     }));
     latestInference = { ...data, latency: performance.now() - startedAt };
+    if ($("nerdMode").checked) renderNerdTelemetry();
     renderNerdLogs();
     $("status").textContent = segmentationMode === "semantic"
       ? `${data.class_count} semantic classes detected`
@@ -361,6 +395,7 @@ $("palette").oninput = (e) => $("paletteValue").textContent = e.target.value.toU
 $("colorCount").oninput = (e) => $("colorCountValue").textContent = e.target.value;
 $("maxSegments").oninput = (e) => { $("maxSegmentsValue").textContent = e.target.value; };
 $("flash").oninput = (e) => $("flashValue").textContent = `${e.target.value}%`;
+$("flashSpeed").oninput = (e) => $("flashSpeedValue").textContent = `${(+e.target.value).toFixed(1)} Hz`;
 $("nerdMode").onchange = updateNerdMode;
 $("nerdBackgroundColor").oninput = (e) => {
   $("nerdBackgroundColorValue").textContent = e.target.value.toUpperCase();

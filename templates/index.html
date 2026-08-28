@@ -15,6 +15,15 @@
         <section class="nerd-overlay" id="nerdOverlay" aria-live="polite" aria-label="Model telemetry" hidden>
           <div class="nerd-overlay__bar"><span>DEEP LEARNING SEGMENTATION / LIVE INFERENCE</span><span id="nerdClock">--:--:--.---</span></div>
           <pre id="nerdLogs" class="nerd-overlay__logs"></pre>
+          <section class="nerd-telemetry" aria-label="Live model indicators">
+            <div class="nerd-telemetry__heading"><span>MODEL TELEMETRY</span><span class="nerd-telemetry__signal">● LIVE</span></div>
+            <div class="nerd-telemetry__metrics">
+              <span>FPS <b id="nerdFps">--</b></span><span>LAT <b id="nerdLatency">-- ms</b></span>
+              <span>MASKS <b id="nerdMasks">--</b></span><span>CLASSES <b id="nerdClasses">--</b></span>
+            </div>
+            <pre class="nerd-telemetry__chart" id="nerdLatencyChart" aria-label="Inference latency history"></pre>
+            <div class="nerd-telemetry__footer"><span id="nerdModel">YOLO11-SEG</span><span id="nerdDevice">AWAITING CUDA</span></div>
+          </section>
           <p class="nerd-overlay__credit">All systems enabled. Developed by Zer&#248; State.</p>
         </section>
         <canvas id="overlay"></canvas>
@@ -24,11 +33,12 @@
       </div>
       <aside class="controls">
         <div class="control-group"><label>Camera</label><button id="startCamera">Start camera</button><p class="status" id="status">Waiting for camera</p><p class="device-status" id="deviceStatus" aria-live="polite">Checking GPU…</p></div>
-        <div class="control-group"><label for="segmentationMode">Segmentation mode</label><select id="segmentationMode"><option value="instance" selected>Semantic</option><option value="semantic">Semantic</option></select></div>
+        <div class="control-group"><label for="segmentationMode">Segmentation mode</label><select id="segmentationMode"><option value="instance">Instance</option><option value="semantic" selected>Semantic</option></select></div>
         <div class="control-group"><label for="maxSegments">Segments to display <output id="maxSegmentsValue">8</output></label><input id="maxSegments" type="range" min="1" max="20" value="8"></div>
         <div class="control-group"><label for="palette">Palette</label><input id="palette" type="color" value="#b6ff3b"><output id="paletteValue">#B6FF3B</output></div>
         <div class="control-group"><label for="colorCount">Segmentation colors <output id="colorCountValue">4</output></label><input id="colorCount" type="range" min="1" max="8" value="4"></div>
         <div class="control-group"><label for="flash">Flash intensity <output id="flashValue">25%</output></label><input id="flash" type="range" min="0" max="100" value="25"></div>
+        <div class="control-group"><label for="flashSpeed">Flash speed <output id="flashSpeedValue">1.0 Hz</output></label><input id="flashSpeed" type="range" min="0.25" max="4" step="0.25" value="1"></div>
         <div class="control-group"><label class="toggle" for="showLabels"><input id="showLabels" type="checkbox"><span>Add labels</span></label><p class="control-hint">Show each segment's class label in its matching color.</p></div>
         <div class="control-group nerd-controls">
           <label class="toggle" for="nerdMode"><input id="nerdMode" type="checkbox"><span>Nerd Mode</span></label>

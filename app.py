@@ -155,11 +155,18 @@ def segment():
         class_names = {class_id: str(name) for class_id, name in result.names.items()}
         masks = semantic_polygons(instance_polygons, frame.shape, class_names) if mode == "semantic" else instance_polygons
         masks = masks[:max_segments]
+        # The client already receives polygon points in ``masks``. Nerd Mode
+        # only needs these three fields, so do not send a second copy of every
+        # polygon in ``detections``.
+        detections = [
+            {key: polygon[key] for key in ("class_id", "class_name", "confidence")}
+            for polygon in instance_polygons[:max_segments]
+        ]
         return jsonify(width=int(frame.shape[1]), height=int(frame.shape[0]), masks=masks, mode=mode,
                        class_count=len({mask["class_id"] for mask in masks}), device=device,
                        accelerated=use_half_precision, model=os.getenv("YOLO_MODEL", "yolo11n-seg.pt"),
                        imgsz=inference_image_size(),
-                       detections=instance_polygons[:max_segments])
+                       detections=detections)
     except Exception as error:
         return jsonify(error=str(error)), 503
 
