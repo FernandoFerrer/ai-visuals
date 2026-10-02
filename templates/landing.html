@@ -37,14 +37,19 @@
         </div>
       </a>
 
-      <article class="concept-card concept-card--coming-soon" aria-label="More visual concepts coming soon">
-        <div class="concept-card__placeholder" aria-hidden="true"><span>+</span></div>
-        <div class="concept-card__content">
-          <p class="eyebrow">Next concept</p>
-          <h2>More visuals are on their way.</h2>
-          <p>New AI visual experiments will appear here.</p>
+      <a class="concept-card concept-card--active concept-card--hive" href="{{ url_for('the_hive') }}">
+        <div class="concept-card__art concept-card__art--hive" aria-hidden="true">
+          <span class="hive-preview__field"></span>
+          <span class="hive-preview__disturbance"></span>
+          <span class="concept-card__label">LIVE / YOLO11-SEG</span>
         </div>
-      </article>
+        <div class="concept-card__content">
+          <p class="eyebrow">02 / Available now</p>
+          <h2>The Hive</h2>
+          <p>Objects disturb a living field of hexagonal cells, transforming AI perception into subtle motion, color and form.</p>
+          <span class="concept-card__action">Enter visual <span aria-hidden="true">&nearr;</span></span>
+        </div>
+      </a>
     </section>
   </main>
 </body>

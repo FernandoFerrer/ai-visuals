@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Hive &mdash; AI Visuals</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="hive-page">
+  <main class="app-shell hive-shell">
+    <header><a class="brand" href="/">AI<span>VISUALS</span> by Zer&#248; State</a><p>The Hive</p></header>
+    <section class="studio hive-studio">
+      <div class="stage hive-stage" id="hiveStage">
+        <video id="camera" autoplay muted playsinline></video>
+        <canvas id="hiveCanvas" aria-label="Interactive hive visual"></canvas>
+        <div class="empty-state" id="emptyState"><strong>The field is waiting.</strong><span>Start the camera to disturb the hive.</span></div>
+        <button class="fullscreen" id="fullscreen" aria-label="Toggle fullscreen">&#10530;</button>
+      </div>
+      <aside class="controls hive-controls">
+        <div class="control-group"><label>Camera</label><button id="startCamera">Start camera</button><p class="status" id="status">Waiting for camera</p><p class="device-status" id="deviceStatus" aria-live="polite">Checking GPU&hellip;</p></div>
+        <div class="control-group"><label for="hexSize">Hive density <output id="hexSizeValue">46 px</output></label><input id="hexSize" type="range" min="28" max="150" value="46"></div>
+        <div class="control-group"><label for="intensity">Interaction intensity <output id="intensityValue">78%</output></label><input id="intensity" type="range" min="30" max="120" value="78"></div>
+        <div class="control-group"><label for="gradientFlow">Gradient flow <output id="gradientFlowValue">50%</output></label><input id="gradientFlow" type="range" min="0" max="100" value="50"></div>
+        <div class="control-group"><label for="interactionRadius">Interaction radius <output id="interactionRadiusValue">100%</output></label><input id="interactionRadius" type="range" min="10" max="160" value="100"></div>
+        <div class="control-group"><label for="animationSpeed">Animation speed <output id="animationSpeedValue">1.0&times;</output></label><input id="animationSpeed" type="range" min="0.5" max="1.6" step="0.1" value="1"></div>
+        <div class="control-group"><label for="cameraOpacity">Camera visibility <output id="cameraOpacityValue">28%</output></label><input id="cameraOpacity" type="range" min="0" max="75" value="28"></div>
+      </aside>
+    </section>
+  </main>
+  <canvas id="capture" hidden></canvas>
+  <script src="{{ url_for('static', filename='hive.js') }}"></script>
+</body>
+</html>

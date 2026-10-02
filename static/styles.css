@@ -172,6 +172,57 @@ body {
   font-weight: 200;
 }
 .concept-card--coming-soon h2 { color: var(--ink); }
+.concept-card--hive:hover { border-color: #c8a96b; }
+.concept-card__art--hive {
+  background: #0b0d0c;
+}
+.hive-preview__field,
+.hive-preview__disturbance {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(30deg, transparent 48%, #65706855 49%, #65706855 51%, transparent 52%),
+    linear-gradient(150deg, transparent 48%, #65706855 49%, #65706855 51%, transparent 52%),
+    linear-gradient(90deg, transparent 48%, #65706855 49%, #65706855 51%, transparent 52%);
+  background-size: 42px 36px;
+  opacity: .55;
+}
+.hive-preview__disturbance {
+  inset: 34px 20% 18px 42%;
+  background-image:
+    linear-gradient(30deg, transparent 47%, #c8a96b 48%, #c8a96b 52%, transparent 53%),
+    linear-gradient(150deg, transparent 47%, #c8a96b 48%, #c8a96b 52%, transparent 53%),
+    linear-gradient(90deg, transparent 47%, #c8a96b 48%, #c8a96b 52%, transparent 53%);
+  background-size: 56px 48px;
+  clip-path: ellipse(44% 54% at 50% 50%);
+  opacity: .7;
+  transform: rotate(-7deg);
+}
+.concept-card--hive .concept-card__action,
+.concept-card--hive .eyebrow { color: #c8a96b; }
+.hive-page { background: #0b0d0c; }
+.hive-page .brand span,
+.hive-page .eyebrow,
+.hive-page output,
+.hive-page .device-status.active { color: #c8a96b; }
+.hive-page .device-status.active { border-color: #c8a96b; }
+.hive-page button { background: #c8a96b; color: #17150f; }
+.hive-page input[type="range"] { accent-color: #c8a96b; }
+.hive-stage { background: #0b0d0c; }
+.hive-stage video {
+  filter: grayscale(.7) saturate(.55) brightness(.6) contrast(.92);
+  transition: opacity .25s ease;
+}
+#hiveCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.hive-stage .empty-state { z-index: 3; }
+.hive-stage .fullscreen { z-index: 4; }
 .app-shell {
   max-width: 1440px;
   padding: 28px;

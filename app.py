@@ -96,6 +96,11 @@ def retro_futuristic_deep_learning_segmentation():
     return render_template("index.html")
 
 
+@app.get("/the-hive")
+def the_hive():
+    return render_template("hive.html")
+
+
 @app.get("/gpu-status")
 def gpu_status():
     """Report the device that will be used before the camera starts."""
