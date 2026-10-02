@@ -87,7 +87,12 @@ def semantic_polygons(instance_polygons: list[dict], frame_shape: tuple[int, ...
 
 
 @app.get("/")
-def index():
+def landing_page():
+    return render_template("landing.html")
+
+
+@app.get("/retro-futuristic-deep-learning-segmentation")
+def retro_futuristic_deep_learning_segmentation():
     return render_template("index.html")
 
 

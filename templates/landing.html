@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Visuals — by Zerø State</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="landing-shell">
+    <header class="landing-header">
+      <a class="brand" href="/">AI<span>VISUALS</span> by Zerø State</a>
+      <p>AI-powered visual experiences</p>
+    </header>
+
+    <section class="landing-intro" aria-labelledby="page-title">
+      <p class="eyebrow">Visual concepts / 01</p>
+      <h1 id="page-title">Experiments for<br>the living screen.</h1>
+      <p class="landing-copy">A growing collection of interactive AI visuals. Choose an experience to enter its visual field.</p>
+    </section>
+
+    <section class="concept-grid" aria-label="AI visual concepts">
+      <a class="concept-card concept-card--active" href="{{ url_for('retro_futuristic_deep_learning_segmentation') }}">
+        <div class="concept-card__art" aria-hidden="true">
+          <span class="concept-card__grid"></span>
+          <span class="concept-card__orb"></span>
+          <span class="concept-card__mask concept-card__mask--one"></span>
+          <span class="concept-card__mask concept-card__mask--two"></span>
+          <span class="concept-card__scanline"></span>
+          <span class="concept-card__label">LIVE / YOLO11-SEG</span>
+        </div>
+        <div class="concept-card__content">
+          <p class="eyebrow">01 / Available now</p>
+          <h2>Retro-futuristic Deep Learning Segmentation</h2>
+          <p>Turn a live camera feed into a pulsing field of AI-detected forms.</p>
+          <span class="concept-card__action">Enter visual <span aria-hidden="true">↗</span></span>
+        </div>
+      </a>
+
+      <article class="concept-card concept-card--coming-soon" aria-label="More visual concepts coming soon">
+        <div class="concept-card__placeholder" aria-hidden="true"><span>+</span></div>
+        <div class="concept-card__content">
+          <p class="eyebrow">Next concept</p>
+          <h2>More visuals are on their way.</h2>
+          <p>New AI visual experiments will appear here.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
