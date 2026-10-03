@@ -6,6 +6,97 @@ const INACTIVE = [52, 56, 50], ACCENTS = [[231, 226, 214], [200, 169, 107], [169
 
 let active = false, processing = false, sourceMasks = [], cells = [];
 let canvasWidth = 0, canvasHeight = 0, pixelRatio = 1, hexPath = null, hexRadius = 0;
+let beeCountHistory = Array(24).fill(0);
+let latestInference = null, hiveLogLines = [], hiveLogTimer = null, hiveLogSequence = 0, lastHiveLogAt = 0;
+
+function hiveTimestamp(date = new Date()) {
+  const pad = (value, length = 2) => String(value).padStart(length, "0");
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${pad(date.getMilliseconds(), 3)}`;
+}
+
+function createHiveLogLine(entry) {
+  const line = document.createElement("span");
+  line.className = "hive-log";
+  const match = entry.match(/^\[([^\]]+)] \[([^\]]+)]\s?(.*)$/);
+  if (!match) { line.textContent = entry; return line; }
+  const [, timestamp, tag, message] = match;
+  const time = document.createElement("span");
+  time.className = "hive-log__time";
+  time.textContent = `[${timestamp}]`;
+  const label = document.createElement("span");
+  label.className = `hive-log__tag hive-log__tag--${tag.split(":", 1)[0]}`;
+  label.textContent = ` [${tag}]`;
+  line.append(time, label, document.createTextNode(` ${message}`));
+  return line;
+}
+
+function appendHiveLogs(lines) {
+  const terminal = $("hiveNerdLogs");
+  hiveLogLines.push(...lines);
+  hiveLogLines = hiveLogLines.slice(-80);
+  terminal.replaceChildren(...hiveLogLines.map(createHiveLogLine));
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+function startHiveLogs() {
+  clearInterval(hiveLogTimer);
+  hiveLogLines = [];
+  hiveLogSequence = 0;
+  lastHiveLogAt = 0;
+  const timestamp = hiveTimestamp();
+  appendHiveLogs([
+    `[${timestamp}] [boot] opening live visual terminal`,
+    `[${timestamp}] [boot] author signature: Zerø State`,
+    `[${timestamp}] [boot] loading segmentation interface`,
+    `[${timestamp}] [boot] mounting camera signal buffer`,
+    `[${timestamp}] [boot] initializing polygon compositor`,
+    `[${timestamp}] [system] neural palette ready`,
+    `[${timestamp}] [system] visual signal stable`,
+    `[${timestamp}] [zero_state] all systems enabled`,
+    `[${timestamp}] [terminal] waiting for live inference…`,
+  ]);
+  hiveLogTimer = setInterval(() => {
+    appendHiveLogs([`[${hiveTimestamp()}] [heartbeat] Zerø State visual engine standing by`]);
+  }, 1800);
+}
+
+function renderHiveLogs(force = false) {
+  if (!$("hiveNerdMode").checked) return;
+  const now = Date.now();
+  if (!force && now - lastHiveLogAt < 700) return;
+  lastHiveLogAt = now;
+  const timestamp = hiveTimestamp();
+  const info = latestInference || {};
+  const detections = (info.detections || []).slice(0, 5);
+  const detectionLines = detections.length
+    ? detections.map((detection, index) => `[${timestamp}] [detect:${String(index + 1).padStart(2, "0")}] class=${detection.class_name || `id_${detection.class_id}`} conf=${((detection.confidence || 0) * 100).toFixed(1)}%`)
+    : [`[${timestamp}] [detect] awaiting objects in camera frame`];
+  const latency = info.latency ? `${info.latency.toFixed(0)}ms` : "--ms";
+  const throughput = info.latency ? `${Math.max(1, Math.round(1000 / info.latency))} fps` : "-- fps";
+  hiveLogSequence += 1;
+  appendHiveLogs([
+    `[${timestamp}] [frame:${String(hiveLogSequence).padStart(4, "0")}] ${info.width || "----"}x${info.height || "----"} mode=${(info.mode || "instance").toUpperCase()}`,
+    `[${timestamp}] [model] ${info.model || "YOLO11 segmentation"} device=${info.device || "initializing"}`,
+    `[${timestamp}] [inference] latency=${latency} throughput=${throughput} masks=${sourceMasks.length} classes=${info.class_count ?? "--"}`,
+    ...detectionLines,
+    `[${timestamp}] [zero_state] polygon trace committed to visual field`,
+  ]);
+}
+
+function updateNerdTelemetry() {
+  if (!$("hiveNerdMode").checked) return;
+  const beeCount = sourceMasks.length;
+  beeCountHistory = [...beeCountHistory.slice(-23), beeCount];
+  const highest = Math.max(...beeCountHistory, 1);
+  const points = beeCountHistory.map((count, index) => {
+    const x = index / (beeCountHistory.length - 1) * 184;
+    const y = 47 - count / highest * 38;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  $("hiveBeeChart").setAttribute("points", points);
+  $("hiveBeeCount").textContent = beeCount;
+  $("hiveBeeStatus").textContent = active ? (beeCount ? "TRACKING" : "SCANNING") : "IDLE";
+}
 
 function profileFor(mask, areaRatio) {
   // A small integer hash gives every YOLO class a repeatable visual character.
@@ -196,12 +287,16 @@ async function infer() {
   capture.width = Math.round(camera.videoWidth * scale); capture.height = Math.round(camera.videoHeight * scale);
   captureCtx.drawImage(camera, 0, 0, capture.width, capture.height);
   try {
+    const startedAt = performance.now();
     const response = await fetch("/segment", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: capture.toDataURL("image/jpeg", 0.72), mode: "instance", max_segments: 12 }) });
     const data = await response.json();
     if (!response.ok) throw Error(data.error);
     const xScale = camera.videoWidth / data.width, yScale = camera.videoHeight / data.height;
     sourceMasks = data.masks.map((mask) => ({ ...mask, points: mask.points.map(([x, y]) => [x * xScale, y * yScale]) }));
+    latestInference = { ...data, latency: performance.now() - startedAt };
     updateCellTargets();
+    updateNerdTelemetry();
+    renderHiveLogs();
     $("status").textContent = sourceMasks.length ? `${sourceMasks.length} object${sourceMasks.length === 1 ? "" : "s"} shaping the field` : "The field is at rest";
   } catch (error) { $("status").textContent = `Segmentation unavailable: ${error.message}`; }
   processing = false;
@@ -226,6 +321,16 @@ $("gradientFlow").oninput = (event) => { $("gradientFlowValue").textContent = `$
 $("interactionRadius").oninput = (event) => { $("interactionRadiusValue").textContent = `${event.target.value}%`; updateCellTargets(); };
 $("animationSpeed").oninput = (event) => { $("animationSpeedValue").textContent = `${(+event.target.value).toFixed(1)}×`; };
 $("cameraOpacity").oninput = (event) => { $("cameraOpacityValue").textContent = `${event.target.value}%`; camera.style.opacity = event.target.value / 100; };
+$("hiveNerdMode").onchange = (event) => {
+  $("hiveNerd").hidden = !event.target.checked;
+  clearInterval(hiveLogTimer);
+  if (event.target.checked) {
+    beeCountHistory = Array(24).fill(0);
+    updateNerdTelemetry();
+    startHiveLogs();
+    renderHiveLogs(true);
+  }
+};
 $("fullscreen").onclick = () => stage.requestFullscreen?.();
 
 new ResizeObserver(fitStage).observe(stage);

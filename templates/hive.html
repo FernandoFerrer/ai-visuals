@@ -15,6 +15,26 @@
       <div class="stage hive-stage" id="hiveStage">
         <video id="camera" autoplay muted playsinline></video>
         <canvas id="hiveCanvas" aria-label="Interactive hive visual"></canvas>
+        <section class="hive-nerd" id="hiveNerd" aria-label="Hive detection diagnostics" hidden>
+          <pre class="hive-nerd__logs" id="hiveNerdLogs" aria-live="polite" aria-label="Live model detection logs"></pre>
+          <section class="hive-nerd__telemetry" aria-live="polite">
+            <div class="hive-nerd__topline"><span>HIVE SIGNAL</span><span class="hive-nerd__live">LIVE</span></div>
+            <div class="hive-nerd__reading">
+              <svg class="hive-nerd__bee" viewBox="0 0 64 54" aria-hidden="true">
+                <path d="M30 19c-6-10-15-11-17-7-2 5 5 12 15 12M34 19c6-10 15-11 17-7-2 5-5 12-15 12" />
+                <path d="M25 23c-7 2-10 11-5 17 5 6 19 7 25 0 5-6 2-15-5-17-4-2-11-2-15 0Z" />
+                <path d="M26 29h13M27 35h12M31 23v-5M35 23v-5" />
+                <circle cx="31" cy="17" r="1" /><circle cx="35" cy="17" r="1" />
+              </svg>
+              <div><strong id="hiveBeeCount">0</strong><span>BEES DETECTED</span></div>
+            </div>
+            <svg class="hive-nerd__chart" viewBox="0 0 184 54" preserveAspectRatio="none" role="img" aria-label="Recent bee detection count">
+              <path class="hive-nerd__grid" d="M0 13.5H184M0 27H184M0 40.5H184" />
+              <polyline id="hiveBeeChart" points="0,48 184,48" />
+            </svg>
+            <div class="hive-nerd__footer"><span>OBJECT STREAM</span><span id="hiveBeeStatus">IDLE</span></div>
+          </section>
+        </section>
         <div class="empty-state" id="emptyState"><strong>The field is waiting.</strong><span>Start the camera to disturb the hive.</span></div>
         <button class="fullscreen" id="fullscreen" aria-label="Toggle fullscreen">&#10530;</button>
       </div>
@@ -26,6 +46,7 @@
         <div class="control-group"><label for="interactionRadius">Interaction radius <output id="interactionRadiusValue">100%</output></label><input id="interactionRadius" type="range" min="10" max="160" value="100"></div>
         <div class="control-group"><label for="animationSpeed">Animation speed <output id="animationSpeedValue">1.0&times;</output></label><input id="animationSpeed" type="range" min="0.5" max="1.6" step="0.1" value="1"></div>
         <div class="control-group"><label for="cameraOpacity">Camera visibility <output id="cameraOpacityValue">28%</output></label><input id="cameraOpacity" type="range" min="0" max="75" value="28"></div>
+        <div class="control-group hive-nerd-control"><label class="toggle" for="hiveNerdMode"><input id="hiveNerdMode" type="checkbox"><span>Nerd mode</span></label><p class="control-hint">Show the field trace and live bee count.</p></div>
       </aside>
     </section>
   </main>
