@@ -3,13 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0b0a">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico', v=1) }}" sizes="any" type="image/x-icon">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png', v=1) }}">
   <title>AI Visuals — by ZERØ STATE</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <main class="landing-shell">
     <header class="landing-header">
+      <div class="landing-brand">
+        <a class="landing-brand__icon-link" href="/" aria-label="AI Visuals home"><img class="landing-brand__icon" src="{{ url_for('static', filename='icon.png', v=1) }}" alt=""></a>
       <a class="brand" href="/">AI<span>VISUALS</span> by ZERØ STATE</a>
+      </div>
       <p>AI-powered visual experiences</p>
     </header>
 
