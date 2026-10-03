@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aura Flow — AI Visuals</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="aura-page">
+  <main class="app-shell aura-shell">
+    <header class="aura-header">
+      <a class="brand" href="/">AI<span>VISUALS</span> by Zerø State</a>
+      <p id="deviceStatus" class="device-status">Preparing the field…</p>
+    </header>
+    <section class="studio aura-studio">
+      <div class="stage aura-stage" id="stage">
+        <canvas id="fluidCanvas" aria-label="Fluid field"></canvas>
+        <canvas id="auraCanvas" aria-label="Live segmentation aura"></canvas>
+        <video id="camera" autoplay muted playsinline aria-hidden="true"></video>
+        <canvas id="capture" aria-hidden="true"></canvas>
+        <div class="empty-state aura-empty" id="emptyState">
+          <strong>Aura Flow</strong>
+          <span>Begin to let the field sense your presence.</span>
+        </div>
+        <button class="fullscreen" id="fullscreen" aria-label="Toggle fullscreen">⛶</button>
+      </div>
+      <aside class="controls aura-controls">
+        <div class="aura-title">
+          <h1>Aura Flow</h1>
+          <p>Invisible presences, moving through liquid.</p>
+        </div>
+        <div class="control-group">
+          <label for="palette">Aura palette</label>
+          <select id="palette">
+            <option value="seaglass">Sea glass</option>
+            <option value="dusk">Dusk bloom</option>
+            <option value="amber">Soft amber</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="auraIntensity">Aura intensity <output id="auraIntensityValue">10%</output></label>
+          <input id="auraIntensity" type="range" min="4" max="22" value="10">
+        </div>
+        <div class="control-group">
+          <label for="interaction">Fluid interaction <output id="interactionValue">58%</output></label>
+          <input id="interaction" type="range" min="20" max="100" value="58">
+        </div>
+        <div class="control-group">
+          <label for="persistence">Fluid persistence <output id="persistenceValue">74%</output></label>
+          <input id="persistence" type="range" min="35" max="95" value="74">
+        </div>
+        <div class="control-group">
+          <label for="maxSegments">Segments <output id="maxSegmentsValue">10</output></label>
+          <input id="maxSegments" type="range" min="1" max="20" value="10">
+        </div>
+        <div class="control-group aura-action">
+          <button id="startCamera">Start camera</button>
+          <p class="control-hint" id="status">The field is at rest.</p>
+        </div>
+        <p class="aura-credit">Fluid simulation adapted from Pavel Dobryakov’s MIT-licensed WebGL Fluid Simulation.</p>
+      </aside>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='aura-fluid.js') }}"></script>
+  <script src="{{ url_for('static', filename='aura-flow.js') }}"></script>
+</body>
+</html>

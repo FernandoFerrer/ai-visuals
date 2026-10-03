@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Synthwave Arcade &mdash; AI Visuals</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="synthwave-page">
+  <main class="app-shell synthwave-shell">
+    <header><a class="brand" href="/">AI<span>VISUALS</span> by Zer&#248; State</a><p>Synthwave Arcade</p></header>
+    <section class="studio synthwave-studio">
+      <div class="stage synthwave-stage" id="synthwaveStage">
+        <video id="camera" autoplay muted playsinline></video>
+        <canvas id="synthwaveCanvas" aria-label="Interactive synthwave landscape"></canvas>
+        <div class="empty-state" id="emptyState"><strong>The horizon is alive.</strong><span>Start the camera to enter the landscape.</span></div>
+        <button class="fullscreen" id="fullscreen" aria-label="Toggle fullscreen">&#10530;</button>
+      </div>
+      <aside class="controls synthwave-controls">
+        <div class="control-group"><label>Camera</label><button id="startCamera">Start camera</button><p class="status" id="status">Ambient mode</p><p class="device-status" id="deviceStatus" aria-live="polite">Checking GPU&hellip;</p></div>
+        <div class="control-group"><label for="palette">Colour palette</label><select id="palette"><option value="sunset">Sunset arcade</option><option value="violet">Violet night</option><option value="ocean">Cyan dusk</option></select></div>
+        <div class="control-group"><label for="gridDensity">Grid density <output id="gridDensityValue">18</output></label><input id="gridDensity" type="range" min="10" max="30" value="18"></div>
+        <div class="control-group"><label for="perspective">Perspective <output id="perspectiveValue">70%</output></label><input id="perspective" type="range" min="45" max="88" value="70"></div>
+        <div class="control-group"><label for="characterSize">Character size <output id="characterSizeValue">34 px</output></label><input id="characterSize" type="range" min="18" max="64" value="34"></div>
+        <div class="control-group"><label for="smoothing">Character smoothing <output id="smoothingValue">18%</output></label><input id="smoothing" type="range" min="6" max="40" value="18"></div>
+        <div class="control-group"><label for="interactionRadius">Interaction radius <output id="interactionRadiusValue">120 px</output></label><input id="interactionRadius" type="range" min="60" max="260" value="120"></div>
+        <div class="control-group"><label for="interactionStrength">Interaction strength <output id="interactionStrengthValue">72%</output></label><input id="interactionStrength" type="range" min="20" max="120" value="72"></div>
+        <div class="control-group"><label for="trailLength">Trail length <output id="trailLengthValue">18</output></label><input id="trailLength" type="range" min="4" max="36" value="18"></div>
+        <div class="control-group"><label for="glow">Glow intensity <output id="glowValue">58%</output></label><input id="glow" type="range" min="0" max="100" value="58"></div>
+        <div class="control-group"><label for="animationSpeed">Environment speed <output id="animationSpeedValue">1.0&times;</output></label><input id="animationSpeed" type="range" min="0.3" max="1.8" step="0.1" value="1"></div>
+        <div class="control-group"><label for="effectDecay">Effect decay <output id="effectDecayValue">10%</output></label><input id="effectDecay" type="range" min="4" max="30" value="10"></div>
+      </aside>
+    </section>
+  </main>
+  <canvas id="capture" hidden></canvas>
+  <script src="{{ url_for('static', filename='synthwave.js') }}"></script>
+</body>
+</html>

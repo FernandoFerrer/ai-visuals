@@ -101,6 +101,16 @@ def the_hive():
     return render_template("hive.html")
 
 
+@app.get("/synthwave-arcade")
+def synthwave_arcade():
+    return render_template("synthwave.html")
+
+
+@app.get("/aura-flow")
+def aura_flow():
+    return render_template("aura-flow.html")
+
+
 @app.get("/gpu-status")
 def gpu_status():
     """Report the device that will be used before the camera starts."""

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Visuals — by Zerø State</title>
+  <title>AI Visuals — by ZERØ STATE</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <main class="landing-shell">
     <header class="landing-header">
-      <a class="brand" href="/">AI<span>VISUALS</span> by Zerø State</a>
+      <a class="brand" href="/">AI<span>VISUALS</span> by ZERØ STATE</a>
       <p>AI-powered visual experiences</p>
     </header>
 
@@ -47,6 +47,37 @@
           <p class="eyebrow">02 / Available now</p>
           <h2>The Hive</h2>
           <p>Objects disturb a living field of hexagonal cells, transforming AI perception into subtle motion, color and form.</p>
+          <span class="concept-card__action">Enter visual <span aria-hidden="true">&nearr;</span></span>
+        </div>
+      </a>
+
+      <a class="concept-card concept-card--active concept-card--synthwave" href="{{ url_for('synthwave_arcade') }}">
+        <div class="concept-card__art concept-card__art--synthwave" aria-hidden="true">
+          <span class="synth-preview__sun"></span>
+          <span class="synth-preview__mountains"></span>
+          <span class="synth-preview__grid"></span>
+          <span class="concept-card__label">LIVE / YOLO11-SEG</span>
+        </div>
+        <div class="concept-card__content">
+          <p class="eyebrow">03 / Available now</p>
+          <h2>Synthwave Arcade</h2>
+          <p>People become tiny arcade travellers, shaping a living sunset landscape as they move.</p>
+          <span class="concept-card__action">Enter visual <span aria-hidden="true">&nearr;</span></span>
+        </div>
+      </a>
+
+      <a class="concept-card concept-card--active concept-card--aura" href="{{ url_for('aura_flow') }}">
+        <div class="concept-card__art concept-card__art--aura" aria-hidden="true">
+          <span class="aura-preview__ribbon aura-preview__ribbon--one"></span>
+          <span class="aura-preview__ribbon aura-preview__ribbon--two"></span>
+          <span class="aura-preview__ribbon aura-preview__ribbon--three"></span>
+          <span class="aura-preview__presence"></span>
+          <span class="concept-card__label">LIVE / FLUID FIELD</span>
+        </div>
+        <div class="concept-card__content">
+          <p class="eyebrow">04 / Available now</p>
+          <h2>Aura Flow</h2>
+          <p>Invisible presences stir a calm, liquid field into soft shifting auras and natural wakes.</p>
           <span class="concept-card__action">Enter visual <span aria-hidden="true">&nearr;</span></span>
         </div>
       </a>
